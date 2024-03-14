@@ -1,0 +1,218 @@
+Release history for xiate
+
+v22.12  2022-12-23
+  [Added]
+  - We set the Wayland "app_id" now by combining "res_name" and
+    "res_class" of "WM_CLASS" into "{res_name}.{res_class}".
+
+v21.05  2021-05-29
+  [Changed]
+  - "config.h" is gone. Instead, you can now place a "config.ini" in the
+    directory "~/.config/xiate".
+
+  [Added]
+  - Hotkeys are now customizable via config.ini.
+
+v20.07  2020-07-19
+  [Fixed]
+  - Build no longer depends on GNU sed.
+
+v20.06  2020-06-09
+  [Fixed]
+  - Outdated hotkey was listed in config.def.h.
+
+  [Added]
+  - "Ctrl + Shift + P" selects previous font. (Opposite of the already
+    existing "Ctrl + Shift + N".)
+
+v20.05  2020-05-15
+  [Changed]
+  - Hotkeys for changing fonts have been revised. They no longer depend
+    on you having a keypad. This also changes how fonts are addressed
+    with "--fontindex": Indexes now start at 0. You can now specify an
+    arbitrary number of fonts (but at least one).
+  - The hotkey for launching the history handler has been changed from
+    "Ctrl + Shift + F" to "Ctrl + Shift + H" to be more mnemonic.
+
+  [Fixed]
+  - When resetting the font scale, the window will be resized
+    accordingly to keep the same number of columns and lines.
+  - Makefile: Copy config.h from config.def.h if it does not exist.
+
+v20.04  2020-04-22
+  [Changed]
+  - config.h: "c_bold" now defaults to NULL which harmonizes better with
+    "bold_is_bright = FALSE".
+  - config.h: Default to a generic "Monospace" instead of "qsqs".
+
+v20.03  2020-03-28
+  [Changed]
+  - config.h: "enable_bold" has been removed. VTE's function
+    "vte_terminal_set_allow_bold()" is deprecated now and will probably
+    be removed soon: https://bugzilla.gnome.org/show_bug.cgi?id=762247#c36
+  - config.h: We default to "bold_is_bright = FALSE" now, but you can
+    still return to the old behaviour as long as this switch remains
+    available in VTE (but you should expect it to vanish in a few
+    years).
+
+v19.11  2019-11-02
+  [Added]
+  - Command line option to choose initial font.
+
+v19.05  2019-05-30
+  [Added]
+  - config.h: Add option "bold_is_bright". VTE's default has changed and
+    I want the old behaviour back.
+
+v18.07  2018-07-08
+  [Changed]
+  - Allow customization of cursor attributes: Blinking on/off and shape.
+    This is listed under "Changed", because you have to merge the new
+    config.def.h in order to define two new variables.
+  - The sub directory "man1" has been removed, the manpage now lives in
+    the repo's root directory. This is only relevant to you if you don't
+    use "make install".
+  - The project has moved away from GitHub, thus changing some links in
+    the documentation.
+
+v18.05  2018-05-20
+  [Changed]
+  - The client-server model has been removed. There's only one binary
+    called "xiate" now and it launches one terminal window. This change
+    has been done to be more resilient towards crashes (errors in xiate
+    itself or the libraries it uses).
+  - The Makefile now explicitly demands C99.
+
+v18.04  2018-04-30
+  [Added]
+  - When the mouse pointer hovers over an explicit hyperlink, xiate now
+    shows a tooltip window that displays the link's target.
+
+  [Changed]
+  - Geometry hints will no longer be set on our top-level windows. This
+    functionality has been removed from GTK+.
+
+v18.03  2018-03-17
+  [Changed]
+  - It is no longer possible to set handler paths in config.h to NULL.
+  - Handlers ("link_handler" and "history_handler") will now be searched
+    for in your $PATH.
+  - "hyperlink_handler" has been replaced by "link_handler". It will be
+    called for explicit hyperlinks as before, but also for plain text
+    links that have been detected by your regex.
+  - The hardcoded default of copying links to the X11 clipboard is gone.
+    If you want this functionality, you can use a tool like xclip in
+    your link handler.
+
+v18.01  2018-01-28
+  [Fixed]
+  - There was a race condition in the communication between server and
+    client. Depending on your machine (or its current load), the server
+    might not have read all data sent by the client. Example: When
+    running "xiatec -hold -e ls -al", the server might have dropped the
+    "-e ..." part, thus running only a shell.
+
+  [Changed]
+  - xiatec now keeps running until the associated terminal window has
+    been closed.
+  - This requires a change in the protocol spoken between server and
+    client. "H" now needs a NUL byte following it and the entire
+    sequence must be enclosed in "S\000 .. F\000".
+  - xiatec will now exit with 0 if the child program terminated
+    successfully and with 1 otherwise. This requires another change in
+    the protocol: The server will send exactly one byte to the client,
+    containing said exit code.
+  - Also, the client has been reimplemented in C, so the dependency on
+    Bash and socat is gone.
+  - Sockets now live in /tmp/xiate-$uid.
+
+  [Added]
+  - xiate (the daemon) now aborts if there is an unexpected number of
+    command line arguments. This prevents accidents like running "xiate
+    --suffix test" which would result in the server listening on the
+    "main" socket.
+  - Ctrl+F dumps the terminal history to a file and calls a tool you
+    specify in config.h. This allows you to search through history or
+    save parts of it.
+
+v17.10  2017-10-18
+  [Changed]
+  - We use vte_terminal_spawn_async() now, because the _sync() function
+    has been deprecated. This means that you now get a proper error
+    message on STDERR if spawning the main child process failed.
+
+  [Added]
+  - Support explicit hyperlinks. This adds the new variable
+    "hyperlink_handler" to config.h and REQUIRES you to use VTE 0.50 or
+    newer. See config.def.h for more info on that feature.
+
+v17.09  2017-09-16
+  [LICENSING]
+  - The project has been relicensed under the MIT license (more
+    precisely called "Expat License", but everyone calls it "MIT
+    license" these days).
+
+v17.02  2017-02-12
+  [Fixed]
+  - xiatec no longer fails if user parameters contain printf format
+    strings (ouch).
+
+  [Added]
+  - xiate now hides the cursor and changes the window title when the
+    child process exits and "-hold" is used.
+  - xiate should cope better with OOM situations. We always try to keep
+    the process running in order to *not* kill all your open terminal
+    windows.
+
+v16.12  2016-12-24
+  [Changed]
+  - The deprecated GRegex API is no longer being used by xiate.
+  - xiate now expects at least VTE version 0.46.
+
+  [Added]
+  - Update geometry hints when changing font or font size.
+  - xiate now responds to resize requests of terminal applications.
+  - Terminal size (in terms of rows and columns) is being retained on
+    changes to fonts or font size.
+
+v16.10  2016-10-29
+  [Added]
+  - Multiple fonts can be specified and you can switch during runtime.
+
+v16.08  2016-08-20
+  [Added]
+  - Foreground color of text under the cursor can be customized.
+
+v16.06  2016-06-26
+  [Changed]
+  - Don't try to reduce flickering by setting the GtkWindow's background
+    color anymore. This issue appears to have resolved itself (other VTE
+    terminals are fine, too).
+  - "internal_border" has been removed from config.h. If you really want
+    to use an internal border, put this in your ~/.config/gtk-3.0/gtk.css:
+
+        vte-terminal {
+            padding: 30px;
+        }
+
+v16.05  2016-05-03
+  - Update for slightly new VTE API.
+
+v16.01  2016-01-05
+  [Fixed]
+  - Properly set X11 window title on the child application's request.
+    Changing icon names is no longer officially supported, though.
+  - Improve window size of newly created floating windows: Set geometry
+    hints and use the correct font.
+
+  [Changed]
+  - Makefile also installs the default client.
+  - Use CSS to set the "internal border". This results in the actual
+    border being one pixel smaller than before.
+  - "args_default" has been replaced by the boolean option "login_shell".
+    We now autodetect your shell.
+  - xiate now expects at least VTE version 0.42.
+
+v15.10  2015-10-04
+  - This is the initial release of xiate.
+  - Daemon, client, manpages.

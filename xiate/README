@@ -1,0 +1,57 @@
+        _       _
+  __  _(_) __ _| |_ ___
+  \ \/ / |/ _` | __/ _ \
+   >  <| | (_| | ||  __/
+  /_/\_\_|\__,_|\__\___|
+  https://uninformativ.de/git/xiate
+  https://uninformativ.de/bugs.html
+
+
+- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+
+xiate is a terminal emulator.
+
+It tries to keep a balance between "features" and "simplicity". This is
+achieved by using VTE as a powerful backend, while UI, configuration,
+and code try to remain much more minimalistic.
+
+
+Installation
+------------
+
+The following C libraries (or newer versions) are required:
+
+    - GTK+ 3.24
+    - GLib 2.68
+    - VTE 0.64
+
+Older versions might work, too, but they are not tested.
+
+xiate was written on GNU (Arch Linux). No portability tests are run by
+the author, but the code tries to stick to POSIX and will probably work
+on other systems as well.
+
+To build the program and install it to /usr/local:
+
+    $ make
+    # make install
+
+
+Running
+-------
+
+It's as simple as:
+
+    $ xiate
+
+This launches one terminal window. There are no tabs.
+
+You can also run a program directly:
+
+    $ xiate -e vim
+
+There are some more command line arguments. Please refer to the manpage.
+
+xiate reads "$XDG_CONFIG_HOME/xiate/config.ini" on startup. Please
+consult "config.example.ini" to find out which options you can set.

@@ -1,0 +1,20 @@
+Setting WM_CLASS is deprecated in GTK
+=====================================
+
+This is a general GTK+ issue. They don't appear to suggest a replacement
+for this function. It is pretty important on X11, though, so I won't
+simply remove it: With window managers like dwm, i3, katriawm, Openbox,
+and many others, a meaningful class and instance name is required for
+window rules to match.
+
+terminal.c: In function ‘term_new’:
+terminal.c:358:5: warning: ‘gtk_window_set_wmclass’ is deprecated [-Wdeprecated-declarations]
+     gtk_window_set_wmclass(GTK_WINDOW(t->win), wm_name, wm_class);
+     ^~~~~~~~~~~~~~~~~~~~~~
+In file included from /usr/include/gtk-3.0/gtk/gtkdialog.h:32,
+                 from /usr/include/gtk-3.0/gtk/gtkaboutdialog.h:30,
+                 from /usr/include/gtk-3.0/gtk/gtk.h:31,
+                 from terminal.c:1:
+/usr/include/gtk-3.0/gtk/gtkwindow.h:154:12: note: declared here
+ void       gtk_window_set_wmclass              (GtkWindow           *window,
+            ^~~~~~~~~~~~~~~~~~~~~~
