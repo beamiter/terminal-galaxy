@@ -12,7 +12,7 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 set(CMAKE_BUILD_TYPE Debug)
 
 # Add compiler flags
-add_compile_options(-Wall -Wextra -O3)
+# add_compile_options(-Wall -Wextra -O3)
 
 # Find required packages
 find_package(PkgConfig REQUIRED)

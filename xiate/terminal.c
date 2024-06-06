@@ -336,6 +336,7 @@ sig_bell(VteTerminal *term, gpointer data)
 gboolean
 sig_button_press(GtkWidget *widget, GdkEvent *event, gpointer data)
 {
+    printf("fuck ********\n");
     char *url = NULL;
     char *argv[] = { NULL, NULL, NULL, NULL };
     GError *err = NULL;
@@ -583,7 +584,7 @@ term_new(struct Terminal *t, int argc, char **argv)
     /* Create GTK+ widgets. */
     t->win = gtk_window_new(GTK_WINDOW_TOPLEVEL);
     gtk_window_set_title(GTK_WINDOW(t->win), title);
-    gtk_window_set_wmclass(GTK_WINDOW(t->win), res_name, res_class);
+    // gtk_window_set_wmclass(GTK_WINDOW(t->win), res_name, res_class);
     g_signal_connect(G_OBJECT(t->win), "destroy", G_CALLBACK(sig_window_destroy), t);
 
     /* Wayland only has "app_id", so we need to decide whether we put
@@ -726,6 +727,12 @@ term_new(struct Terminal *t, int argc, char **argv)
         }
         args_use = args_default;
         spawn_flags = G_SPAWN_SEARCH_PATH | G_SPAWN_FILE_AND_ARGV_ZERO;
+    }
+    // Iterate over the array until we hit the NULL terminator.
+    char **ptr = args_use;
+    while (*ptr != NULL) {
+        printf("%s\n", *ptr);  // Print each string
+        ptr++;                 // Move to the next string
     }
 
     vte_terminal_spawn_async(VTE_TERMINAL(t->term), VTE_PTY_DEFAULT, NULL,
