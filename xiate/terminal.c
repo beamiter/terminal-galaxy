@@ -293,7 +293,6 @@ void sig_bell(VteTerminal *term, gpointer data) {
 }
 
 gboolean sig_button_press(GtkWidget *widget, GdkEvent *event, gpointer data) {
-  printf("fuck ********\n");
   char *url = NULL;
   char *argv[] = {NULL, NULL, NULL, NULL};
   GError *err = NULL;
