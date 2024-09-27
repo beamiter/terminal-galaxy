@@ -12,6 +12,9 @@ add_compile_options(
     # Put your compile options here (e.g., -Wall -Wextra -O2)
 )
 
+set(CMAKE_BUILD_TYPE Debug)
+set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
+
 # Include directories
 include_directories(
     ${CMAKE_CURRENT_SOURCE_DIR} # You might want to include other directories
